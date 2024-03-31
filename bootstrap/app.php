@@ -29,7 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->renderable(function (ValidationException $e, $request) {
-            return response()->json(['error' => 'Los datos proporcionados no son validos.'], 422);
+            return response()->json(['errors' => $e->errors()], $e->status);
         });
     })
     ->create();
