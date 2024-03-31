@@ -5,10 +5,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
-
+use App\Http\Controllers\PasswordResetController;
 // Rutas que no requieren autenticación
 Route::post('/registro', [AuthController::class, 'register']);
-
+// En routes/api.php
+Route::post('password/email', [PasswordResetController::class, 'sendEmail']);
+Route::post('password/reset', [PasswordResetController::class, 'reset']);
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/user', function (Request $request) {
