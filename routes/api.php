@@ -6,8 +6,12 @@ use App\Http\Controllers\AuthController;
 
 Route::post('/registro', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/generate-report', 'ReportController@generate');
+use App\Http\Controllers\ReportController;
 
-Route::get('/users', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::post('/generate-report', [ReportController::class, 'generate']);
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});

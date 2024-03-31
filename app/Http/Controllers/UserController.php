@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
@@ -10,8 +12,6 @@ class UserController extends Controller
     //el metodo index() devuelve todos los usuarios
     public function index()
     {
-
-        
         return User::all();
     }
 
@@ -29,12 +29,15 @@ class UserController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'role' => 'required',
-        
         ]);
+
+        $validatedData['password'] = Hash::make($validatedData['password']);
 
         $user = User::create($validatedData);
 
-        return response()->json($user, 201);
+        $token = JWTAuth::fromUser($user);
+
+        return response()->json(['user' => $user, 'token' => $token], 201);
     }
 
     // el metodo update() actualiza un usuario
@@ -46,6 +49,8 @@ class UserController extends Controller
             'password' => 'required|min:6',
             'role' => 'required',
         ]);
+
+        $validatedData['password'] = Hash::make($validatedData['password']);
 
         $user->update($validatedData);
 
