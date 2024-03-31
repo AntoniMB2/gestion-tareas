@@ -31,7 +31,7 @@ class PasswordResetController extends Controller
         // Inserta el nuevo token
         DB::table('password_reset_tokens')->insert([
             'email' => $request->email,
-            'token' => $hashedToken,
+            'token' => $token,
             'created_at' => Carbon::now()
         ]);
 
@@ -58,13 +58,13 @@ class PasswordResetController extends Controller
             ->first();
 
         if (!$passwordReset) {
-            return response()->json(['message' => 'Este token de restablecimiento de contraseña es inválido.'], 404);
+            return response()->json(['message' => 'Este token de restablecimiento de contrasena es invalido.'], 404);
         }
 
         $user = User::where('email', $passwordReset->email)->first();
 
         if (!$user) {
-            return response()->json(['message' => 'No podemos encontrar un usuario con esa dirección de correo electrónico.'], 404);
+            return response()->json(['message' => 'No podemos encontrar un usuario con esa dirección de correo electronico.'], 404);
         }
 
         $user->password = bcrypt($request->password);
@@ -72,6 +72,6 @@ class PasswordResetController extends Controller
 
         DB::table('password_reset_tokens')->where('email', $user->email)->delete();
 
-        return response()->json(['message' => '¡Contraseña restablecida con éxito!']);
+        return response()->json(['message' => 'La contrasena fue restablecida con exito']);
     }
 }
