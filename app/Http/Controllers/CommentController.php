@@ -75,7 +75,7 @@ class CommentController extends Controller
 
         // Si el usuario no es el autor del comentario o un superadministrador, no tiene permiso para modificarlo
         if (Auth::user()->id != $comment->user_id && !Auth::user()->superadmin) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            return response()->json(['error' => 'Usted no esta autorizado para esta acción'], 403);
         }
 
         $rules = ['content' => 'required'];
@@ -101,7 +101,7 @@ class CommentController extends Controller
 
         // Si el usuario no es el autor del comentario o un superadministrador, no tiene permiso para eliminarlo
         if (Auth::user()->id != $comment->user_id && !Auth::user()->superadmin) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            return response()->json(['error' => 'Usted no esta autorizado para esta acción'], 403);
         }
 
 

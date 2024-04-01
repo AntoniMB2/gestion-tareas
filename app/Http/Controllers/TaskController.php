@@ -81,7 +81,7 @@ class TaskController extends Controller
 
         // Si el usuario no es un superadmin y la tarea no le pertenece, no tiene permiso para modificarla
         if ($request->user()->role !== 'superadmin' && $request->user()->id != $task->user_id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            return response()->json(['error' => 'Usted no esta autorizado para esta acción'], 403);
         }
 
         $messages = [
@@ -128,7 +128,7 @@ class TaskController extends Controller
     public function destroy($id)
     {
         if (Auth::user()->role != 'superadmin') {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            return response()->json(['error' => 'Usted no esta autorizado para esta acción'], 403);
         }
         if (!is_numeric($id) || $id < 1 ) {
             return response()->json(['error' => 'ID de tarea no válido'], 400);
