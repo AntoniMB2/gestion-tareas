@@ -94,10 +94,23 @@ $validatedData['password'] = Hash::make('password_temporal');
         return response()->json($user, 200);
     }
 
-    // el metodo destroy() elimina un usuario en particular por su id
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        $user->delete();
+        // Verifica si el ID es un número entero y no es negativo
+        if (!is_numeric($id) || $id < 1) {
+            return response()->json(['error' => 'ID de usuario no válido'], 400);
+        }
+    
+        // Busca el usuario por su ID
+        $user = User::find($id);
+    
+        // Si el usuario no existe, devuelve un error
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
+        // Elimina el usuario
+        $user->forcedelete();
+    
         return response()->json(null, 204);
     }
 }

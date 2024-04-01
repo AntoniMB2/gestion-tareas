@@ -3,8 +3,7 @@
 <head>
     <title>Bienvenido/a</title>
     <style>
-        /* Estilos CSS para hacerlo bonito */
-        body {
+         body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
             padding: 20px;
@@ -13,7 +12,7 @@
         .container {
             max-width: 600px;
             margin: 0 auto;
-            background-color: #fff;
+            background-color: #7ba9b0;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -24,14 +23,14 @@
             text-align: center;
         }
         
-        p {
-            color: #666;
+        p, a {
+            color: #333;
             line-height: 1.5;
         }
         
-        .button {
+        a.button {
             display: inline-block;
-            background-color: #007bff;
+            background-color: #28555c;
             color: #fff;
             padding: 10px 20px;
             text-decoration: none;
