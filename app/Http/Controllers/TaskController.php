@@ -6,6 +6,7 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class TaskController extends Controller
 {
     // Muestra todas las tareas
@@ -53,15 +54,16 @@ class TaskController extends Controller
             'title.required' => 'El campo título es obligatorio.',
             'description.required' => 'El campo descripción es obligatorio.',
             'status.required' => 'El campo estado es obligatorio.',
-            'status.in' => 'El estado debe ser pendiente, en_progreso, bloqueado o completada.',
+            'status.in' => 'El estado debe ser Pendiente, En_progreso, Bloqueado o Completado.',
             'assigned_to.required' => 'El campo asignado a es obligatorio.',
             'assigned_to.exists' => 'El usuario asignado no existe.',
         ];
+     
 
         $validatedData = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
-            'status' => 'required|in:pendiente,en_progreso,bloqueado,completada',
+            'status' => 'required|in:Pendiente,En_progreso,Bloqueado,Completado',
             'assigned_to' => 'required|exists:users,id',
         ], $messages);
 
@@ -76,52 +78,51 @@ class TaskController extends Controller
     public function update(Request $request, $id)
     {
         $task = Task::findOrFail($id);
-
+    
         // Si el usuario no es un superadmin y la tarea no le pertenece, no tiene permiso para modificarla
-        if (!Auth::user()->is_superadmin && Auth::user()->id != $task->user_id) {
+        if ($request->user()->role !== 'superadmin' && $request->user()->id != $task->user_id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-
+    
         $messages = [
             'title.required' => 'El campo título es obligatorio.',
             'description.required' => 'El campo descripción es obligatorio.',
             'status.required' => 'El campo estado es obligatorio.',
-            'status.in' => 'El estado debe ser pendiente, en_progreso, bloqueado o completada.',
+            'status.in' => 'El estado debe ser Pendiente, En_progreso, Bloqueado o Completado.',
             'assigned_to.required' => 'El campo asignado a es obligatorio.',
             'assigned_to.exists' => 'El usuario asignado no existe.',
         ];
-
+    
         // Define las reglas de validación
-        $rules = ['status' => 'required|in:pendiente,en_progreso,bloqueado,completada'];
-        if (Auth::user()->is_superadmin) {
+        $rules = ['status' => 'required|in:Pendiente,En_progreso,Bloqueado,Completado'];
+        if ($request->user()->role === 'superadmin') {
             $rules = [
                 'title' => 'required|max:255',
                 'description' => 'required',
-                'status' => 'required|in:pendiente,en_progreso,bloqueado,completada',
+                'status' => 'required|in:Pendiente,En_progreso,Bloqueado,Completado',
                 'assigned_to' => 'required|exists:users,id',
             ];
         }
-
+    
         // Valida los datos de entrada
         $validatedData = $request->validate($rules, $messages);
-
+    
         // Si el usuario no es un superadmin, solo puede cambiar el estado de la tarea
-        if (!Auth::user()->is_superadmin) {
+        if ($request->user()->role !== 'superadmin') {
             $task->update(['status' => $request->status]);
         } else {
             // Si el usuario es un superadmin, puede modificar cualquier campo de la tarea
             $task->update($validatedData);
         }
-
+    
         // Si el estado de la tarea es 'Completado', establece el campo completed_at a la fecha y hora actuales
         if ($task->status == 'Completado') {
             $task->completed_at = now();
             $task->save();
         }
 
-        return response()->json($task);
     }
-
+    // Elimina una tarea solo si el usuario autenticado es un Superadmin
     public function destroy($id)
     {
         if (Auth::user()->role != 'superadmin') {

@@ -11,7 +11,7 @@ class Task extends Model
 
     const STATUS = [
         'Pendiente',
-        'En proceso',
+        'En_proceso',
         'Bloqueado',
         'Completado',
     ];

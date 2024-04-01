@@ -29,7 +29,7 @@ class GenerateReport implements ShouldQueue
             $tasks = Task::whereBetween('completed_at', [new Carbon($this->startDate), new Carbon($this->endDate)])->get();
     
             // Genera el PDF
-            $pdf = PDF::loadView('report', ['tasks' => $tasks]);
+            $pdf = PDF::loadView('report.report', ['tasks' => $tasks]);
             $pdf->save(storage_path('app/public/reports/report.pdf'));
         }
     }

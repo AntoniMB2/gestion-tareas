@@ -50,6 +50,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('/attachments/{id}', [AttachmentController::class, 'destroy']);
 
     // ruta de reportes
-    Route::post('/generate-report', [ReportController::class, 'generate']);
+    Route::post('/generate-report', [ReportController::class, 'generate'])->name('report.generate');
 
 });
