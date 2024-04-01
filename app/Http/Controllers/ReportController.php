@@ -16,6 +16,6 @@ class ReportController extends Controller
 
         GenerateReport::dispatch($request->start_date, $request->end_date);
 
-        return response()->json(['message' => 'Report generation started.']);
+        return response()->json(['message' => 'Reporte en proceso de generación']);
     }
 }
