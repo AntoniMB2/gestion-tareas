@@ -124,4 +124,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /* 'providers' => [
+        
+        L5Swagger\L5SwaggerServiceProvider::class,
+    ], */
+
 ];
