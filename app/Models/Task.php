@@ -8,4 +8,40 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+        'description',
+        'status',
+        'assigned_to',
+    ];
+
+    /**
+     * Get the user that is assigned to the task.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    /**
+     * Get the comments for the task.
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the attachments for the task.
+     */
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class);
+    }
 }

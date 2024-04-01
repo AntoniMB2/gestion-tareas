@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -15,14 +14,29 @@ class UserController extends Controller
 {
 
     //el metodo index() devuelve todos los usuarios
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->user()->role !== 'superadmin') {
+            return response()->json(['error' => 'No tienes permiso para realizar esta acción'], 403);
+        }
         return User::all();
     }
 
     // el metodo show() devuelve un usuario en particular por su id
-    public function show(User $user)
+    public function show($id)
     {
+         // Verifica si el ID es un número entero y no es negativo
+        if (!is_numeric($id) || $id < 1) {
+            return response()->json(['error' => 'ID de usuario no válido'], 400);
+        }
+
+        // Busca el usuario por su ID
+        $user = User::find($id);
+
+        // Si el usuario no existe, devuelve un error
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
         return $user;
     }
 
