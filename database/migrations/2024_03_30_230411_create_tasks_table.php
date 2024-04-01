@@ -17,6 +17,15 @@ return new class extends Migration
             $table->text('description');
             $table->enum('status', Task::STATUS);
             $table->foreignId('assigned_to')->constrained('users');
+             Schema::create('tasks', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->text('description');
+            $table->enum('status', Task::STATUS);  
+            $table->foreignId('assigned_to')->constrained('users');
+            $table->timestamp('completed_at')->nullable();
+            $table->timestamps();
+        });
             $table->timestamps();
         });
     }

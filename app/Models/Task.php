@@ -26,6 +26,7 @@ class Task extends Model
         'description',
         'status',
         'assigned_to',
+        'completed_at',
     ];
 
     /**

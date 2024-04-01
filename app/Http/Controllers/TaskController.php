@@ -113,6 +113,12 @@ class TaskController extends Controller
             $task->update($validatedData);
         }
 
+        // Si el estado de la tarea es 'Completado', establece el campo completed_at a la fecha y hora actuales
+        if ($task->status == 'Completado') {
+            $task->completed_at = now();
+            $task->save();
+        }
+
         return response()->json($task);
     }
 
