@@ -35,7 +35,7 @@ class AttachmentController extends Controller
         $messages = [
             'file.required' => 'El archivo es requerido.',
             'file.mimes' => 'El archivo debe ser un tipo de: pdf, jpg, jpeg, png.',
-            'file.max' => 'El archivo no debe ser mayor a 2048 kilobytes.',
+            'file.max' => 'El archivo no debe ser mayor a 5048 kilobytes.',
             'task_id.required' => 'El ID de la tarea es requerido.',
             'task_id.exists' => 'La tarea especificada no existe.',
         ];
