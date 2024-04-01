@@ -9,6 +9,13 @@ class Task extends Model
 {
     use HasFactory;
 
+    const STATUS = [
+        'Pendiente',
+        'En proceso',
+        'Bloqueado',
+        'Completado',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -43,5 +50,17 @@ class Task extends Model
     public function attachments()
     {
         return $this->hasMany(Attachment::class);
+    }
+
+    /**
+     * Get the validation rules that apply to the model.
+     *
+     * @return array
+     */
+    public static function rules()
+    {
+        return [
+            'status' => 'in:' . implode(',', self::STATUS),
+        ];
     }
 }

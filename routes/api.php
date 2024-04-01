@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\TaskController;
+
 // Rutas que no requieren autenticación
 Route::post('/registro', [AuthController::class, 'register']);
 // En routes/api.php
@@ -18,11 +20,17 @@ Route::group(['middleware' => 'auth:api'], function () {
         return $request->user();
     });
 
-    // Mover todas las rutas que requieren autenticación aquí
+    // Rutas de usuarios
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{user}', [UserController::class, 'show']);
     Route::post('/users', [UserController::class, 'store']);
     Route::put('/users/{user}', [UserController::class, 'update']);
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
+
+
+    // Rutas de tareas
+    Route::post('/tasks', [TaskController::class, 'store']);
+
+    // Rutas de reportes
     Route::post('/generate-report', [ReportController::class, 'generate']);
 });
