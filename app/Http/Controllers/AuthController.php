@@ -21,15 +21,15 @@ class AuthController extends Controller
             'password.required' => 'El campo contraseña es obligatorio.',
             'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
             'role.required' => 'El campo rol es obligatorio.',
-            'role.in' => 'El rol debe ser admin o user.',
-            'role.exists' => 'El rol debe ser admin o user.',
+            'role.in' => 'El rol debe ser superadmin o user.',
+           
         ];
 
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'role' => 'required|in:admin,user',
+            'role' => 'required|in:superadmin,user',
         ], $messages);
 
         $validatedData['password'] = Hash::make($request->password);

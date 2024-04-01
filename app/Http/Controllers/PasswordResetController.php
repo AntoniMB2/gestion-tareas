@@ -23,7 +23,7 @@ class PasswordResetController extends Controller
         }
 
         $token = rand(100000, 999999);
-        $hashedToken = Hash::make($token);
+       /*  $hashedToken = Hash::make($token); */
 
         // Elimina cualquier token existente para este correo electrónico
         DB::table('password_reset_tokens')->where('email', $request->email)->delete();

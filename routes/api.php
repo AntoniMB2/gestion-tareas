@@ -11,6 +11,7 @@ Route::post('/registro', [AuthController::class, 'register']);
 // En routes/api.php
 Route::post('password/email', [PasswordResetController::class, 'sendEmail']);
 Route::post('password/reset', [PasswordResetController::class, 'reset']);
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/user', function (Request $request) {
@@ -18,7 +19,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     // Mover todas las rutas que requieren autenticación aquí
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{user}', [UserController::class, 'show']);
     Route::post('/users', [UserController::class, 'store']);
