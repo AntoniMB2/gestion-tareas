@@ -15,6 +15,8 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
+            word-wrap: break-word;
+            
         }
         th {
             background-color: #f2f2f2;
@@ -24,6 +26,8 @@
 
 <body>
     <h1>Informe de Tareas</h1>
+    <h2>Fecha del informe: {{ $reportDate }}</h2>
+    <h3>Total de tareas: {{ $tasks->count() }}</h3>
     <table>
         <thead>
             <tr>

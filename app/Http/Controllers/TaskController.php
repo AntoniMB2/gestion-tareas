@@ -130,6 +130,9 @@ class TaskController extends Controller
         if (Auth::user()->role != 'superadmin') {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
+        if (!is_numeric($id) || $id < 1 ) {
+            return response()->json(['error' => 'ID de tarea no válido'], 400);
+        }
 
         $task = Task::findOrFail($id);
 
