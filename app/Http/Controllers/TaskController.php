@@ -58,7 +58,7 @@ class TaskController extends Controller
             'assigned_to.required' => 'El campo asignado a es obligatorio.',
             'assigned_to.exists' => 'El usuario asignado no existe.',
         ];
-     
+
 
         $validatedData = $request->validate([
             'title' => 'required|max:255',
@@ -78,12 +78,12 @@ class TaskController extends Controller
     public function update(Request $request, $id)
     {
         $task = Task::findOrFail($id);
-    
+
         // Si el usuario no es un superadmin y la tarea no le pertenece, no tiene permiso para modificarla
         if ($request->user()->role !== 'superadmin' && $request->user()->id != $task->user_id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-    
+
         $messages = [
             'title.required' => 'El campo título es obligatorio.',
             'description.required' => 'El campo descripción es obligatorio.',
@@ -92,7 +92,7 @@ class TaskController extends Controller
             'assigned_to.required' => 'El campo asignado a es obligatorio.',
             'assigned_to.exists' => 'El usuario asignado no existe.',
         ];
-    
+
         // Define las reglas de validación
         $rules = ['status' => 'required|in:Pendiente,En_progreso,Bloqueado,Completado'];
         if ($request->user()->role === 'superadmin') {
@@ -103,10 +103,10 @@ class TaskController extends Controller
                 'assigned_to' => 'required|exists:users,id',
             ];
         }
-    
+
         // Valida los datos de entrada
         $validatedData = $request->validate($rules, $messages);
-    
+
         // Si el usuario no es un superadmin, solo puede cambiar el estado de la tarea
         if ($request->user()->role !== 'superadmin') {
             $task->update(['status' => $request->status]);
@@ -114,13 +114,15 @@ class TaskController extends Controller
             // Si el usuario es un superadmin, puede modificar cualquier campo de la tarea
             $task->update($validatedData);
         }
-    
+
         // Si el estado de la tarea es 'Completado', establece el campo completed_at a la fecha y hora actuales
         if ($task->status == 'Completado') {
             $task->completed_at = now();
+            $duration = $task->created_at->diffInMinutes($task->completed_at);
+            $task->duration = $duration;
+
             $task->save();
         }
-
     }
     // Elimina una tarea solo si el usuario autenticado es un Superadmin
     public function destroy($id)
@@ -130,6 +132,7 @@ class TaskController extends Controller
         }
 
         $task = Task::findOrFail($id);
+
         $task->delete();
         return response()->json(null, 204);
     }

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use App\Models\Task;
 
 class UserController extends Controller
 
@@ -25,7 +26,7 @@ class UserController extends Controller
     // el metodo show() devuelve un usuario en particular por su id
     public function show($id)
     {
-         // Verifica si el ID es un número entero y no es negativo
+        // Verifica si el ID es un número entero y no es negativo
         if (!is_numeric($id) || $id < 1) {
             return response()->json(['error' => 'ID de usuario no válido'], 400);
         }
@@ -122,10 +123,13 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['error' => 'Usuario no encontrado'], 404);
         }
+
+        Task::where('assigned_to', $id)->delete();
+       
         // Elimina todos los tokens de restablecimiento de contraseña asociados con el usuario
         DB::table('password_reset_tokens')->where('email', $user->email)->delete();
 
-        // Elimina el usuario
+      
         $user->delete();
 
         return response()->json(null, 204);
