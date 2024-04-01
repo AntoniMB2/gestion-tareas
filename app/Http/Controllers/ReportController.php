@@ -9,7 +9,12 @@ class ReportController extends Controller
 {
     public function generate(Request $request)
     {
-        GenerateReport::dispatch();
+        $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        GenerateReport::dispatch($request->start_date, $request->end_date);
 
         return response()->json(['message' => 'Report generation started.']);
     }
