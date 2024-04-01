@@ -12,6 +12,10 @@ class AttachmentController extends Controller
     public function index()
     {
         $attachments = Attachment::all();
+        // si no hay comentarios, devuelve un mensaje no es un error 
+        if ($attachments->isEmpty()) {
+            return response()->json(['message' => 'No hay archivos para mostrar']);
+        }
         return response()->json($attachments);
     }
 
@@ -46,10 +50,10 @@ class AttachmentController extends Controller
     
         // Crea un nuevo registro de archivo adjunto en la base de datos
         $attachment = new Attachment;
-        $attachment->file_path = $path;
+        $attachment->file = $path;
         $attachment->uploaded_by = Auth::user()->id;
+        $attachment->task_id = $request->task_id;
         // Asegúrate de establecer cualquier otra propiedad necesaria en tu modelo Attachment
-    
         $attachment->save();
     
         return response()->json(['attachment' => $attachment, 'message' => 'Archivo adjunto subido con éxito'], 201);

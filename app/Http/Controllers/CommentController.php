@@ -26,26 +26,37 @@ class CommentController extends Controller
         }
         $comments = Comment::where('task_id', $task->id)->get();
 
+        // si no hay comentarios, devuelve un mensaje no es un error 
+        if ($comments->isEmpty()) {
+            return response()->json(['message' => 'No hay comentarios para esta tarea']);
+        }
         return response()->json($comments);
     }
 
     // crear un nuevo comentario
     public function store(Request $request, $taskId)
     {
+        if (!$taskId) {
+            return response()->json(['error' => 'Tarea no encontrada'], 404);
+        }
+        if (!is_numeric($taskId) || $taskId < 1) {
+            return response()->json(['error' => 'ID de tarea no válido'], 400);
+        }
         $task = Task::findOrFail($taskId);
-
         // Define las reglas de validación y los mensajes personalizados
         $rules = [
             'content' => 'required',
-            'task_id' => 'required|exists:tasks,id',
-            'user_id' => 'required|exists:users,id',
+            'content.min' => '1',
         ];
         $messages = [
             'content.required' => 'El contenido del comentario es obligatorio.',
-            'task_id.required' => 'El ID de la tarea es obligatorio.',
-            'task_id.exists' => 'La tarea especificada no existe.',
-            'user_id.required' => 'El ID del usuario es obligatorio.',
+            'content.min' => 'El contenido del comentario debe tener al menos 1 caracter.',
         ];
+
+        // Valida los datos del formulario
+        if ($request->user()->role !== 'superadmin') {
+            return response()->json(['error' => 'No tienes permiso para realizar esta acción'], 403);
+        }
 
         $validatedData = $request->validate($rules, $messages);
         $comment = new Comment;

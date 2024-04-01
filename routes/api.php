@@ -41,13 +41,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/tasks/{taskId}/comments', [CommentController::class, 'store']);
     Route::put('/comments/{id}', [CommentController::class, 'update']);
     Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
-    Route::post('/generate-report', [ReportController::class, 'generate']);
+    
 
     // Rutas de archivos adjuntos
     Route::get('/attachments', [AttachmentController::class, 'index']);
     Route::get('/attachments/{id}', [AttachmentController::class, 'show']);
     Route::post('/attachments', [AttachmentController::class, 'store']);
     Route::delete('/attachments/{id}', [AttachmentController::class, 'destroy']);
+    
 
     // ruta de reportes
     Route::post('/generate-report', [ReportController::class, 'generate'])->name('report.generate');

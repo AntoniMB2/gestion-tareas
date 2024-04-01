@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('task_id');
             $table->string('file');
+            $table->unsignedBigInteger('uploaded_by');
             $table->timestamps();
-
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
+            $table->foreign('uploaded_by')->references('id')->on('users');
         });
     }
 
