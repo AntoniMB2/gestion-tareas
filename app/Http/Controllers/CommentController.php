@@ -72,10 +72,10 @@ class CommentController extends Controller
     public function update(Request $request, $id)
     {
 
-          // Verifica si el comentario existe antes de intentar buscarlo
-    if (!Comment::where('id', $id)->exists()) {
-        return response()->json(['error' => 'Comentario no encontrado'], 404);
-    }
+        // Verifica si el comentario existe antes de intentar buscarlo
+        if (!Comment::where('id', $id)->exists()) {
+            return response()->json(['error' => 'Comentario no encontrado'], 404);
+        }
         $comment = Comment::findOrFail($id);
         // Si el usuario no es el autor del comentario o un superadministrador, no tiene permiso para modificarlo
         if (Auth::user()->id != $comment->user_id && !Auth::user()->superadmin) {
@@ -96,12 +96,12 @@ class CommentController extends Controller
     // Elimina un comentario
     public function destroy($id)
     {
-        $comment = Comment::findOrFail($id);
 
-        // Si el comentario no existe, devuelve un mensaje de error
-        if (!$comment) {
+        // Verifica si el comentario existe antes de intentar buscarlo
+        if (!Comment::where('id', $id)->exists()) {
             return response()->json(['error' => 'Comentario no encontrado'], 404);
         }
+        $comment = Comment::findOrFail($id);
 
         // Si el usuario no es el autor del comentario o un superadministrador, no tiene permiso para eliminarlo
         if (Auth::user()->id != $comment->user_id && !Auth::user()->superadmin) {

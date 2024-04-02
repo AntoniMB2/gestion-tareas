@@ -11,16 +11,27 @@ class TaskController extends Controller
     // Muestra todas las tareas
     public function index()
     {
-        // Obtén las tareas asignadas al usuario autenticado
         $myTasks = Task::where('assigned_to', Auth::user()->id)->get();
-
-        // Obtén todas las demás tareas
         $otherTasks = Task::where('assigned_to', '!=', Auth::user()->id)->get();
 
-        return response()->json([
-            'myTasks' => $myTasks,
-            'otherTasks' => $otherTasks
-        ]);
+        $responseMessage = '';
+        $responseData = [];
+        $taskTypes = ['myTasks' => 'No tienes tareas asignadas. ', 'otherTasks' => 'No se encontraron tareas de otros.'];
+        foreach ($taskTypes as $taskType => $message) {
+            if (${$taskType}->isEmpty()) {
+                $responseMessage .= $message;
+            } else {
+                $responseData[$taskType] = ${$taskType};
+            }
+        }
+        // Si no hay tareas, devuelve un error 404
+        if (empty($responseData)) {
+            return response()->json(['message' => $responseMessage], 404);
+        }
+
+        // Si no, devuelve las tareas
+        $responseData['message'] = $responseMessage;
+        return response()->json($responseData);
     }
 
     // Muestra una tarea en particular por su ID
