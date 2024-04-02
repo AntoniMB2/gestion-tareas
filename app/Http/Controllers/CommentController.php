@@ -71,8 +71,12 @@ class CommentController extends Controller
     // Actualiza un comentario
     public function update(Request $request, $id)
     {
-        $comment = Comment::findOrFail($id);
 
+          // Verifica si el comentario existe antes de intentar buscarlo
+    if (!Comment::where('id', $id)->exists()) {
+        return response()->json(['error' => 'Comentario no encontrado'], 404);
+    }
+        $comment = Comment::findOrFail($id);
         // Si el usuario no es el autor del comentario o un superadministrador, no tiene permiso para modificarlo
         if (Auth::user()->id != $comment->user_id && !Auth::user()->superadmin) {
             return response()->json(['error' => 'Usted no esta autorizado para esta acción'], 403);

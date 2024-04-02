@@ -76,6 +76,15 @@ class TaskController extends Controller
     // Actualiza una tarea solo si el usuario autenticado es un Superadmin
     public function update(Request $request, $id)
     {
+
+        if (!is_numeric($id) || $id < 1) {
+            return response()->json(['error' => 'ID de tarea no válido'], 400);
+        }
+        // Verifica si la tarea existe antes de intentar buscarla
+        if (!Task::where('id', $id)->exists()) {
+            return response()->json(['error' => 'Tarea no encontrada'], 404);
+        }
+
         $task = Task::findOrFail($id);
 
         // Si el usuario no es un superadmin y la tarea no le pertenece, no tiene permiso para modificarla
@@ -129,8 +138,12 @@ class TaskController extends Controller
         if (Auth::user()->role != 'superadmin') {
             return response()->json(['error' => 'Usted no esta autorizado para esta acción'], 403);
         }
-        if (!is_numeric($id) || $id < 1 ) {
+        if (!is_numeric($id) || $id < 1) {
             return response()->json(['error' => 'ID de tarea no válido'], 400);
+        }
+        // Verifica si la tarea existe antes de intentar buscarla
+        if (!Task::where('id', $id)->exists()) {
+            return response()->json(['error' => 'Tarea no encontrada'], 404);
         }
 
         $task = Task::findOrFail($id);
